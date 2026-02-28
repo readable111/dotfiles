@@ -37,6 +37,7 @@ require("lazy").setup({
         -- "matchit",
         -- "matchparen",
         -- "netrwPlugin",
+        -- "mini-starter",
         "tarPlugin",
         "tohtml",
         "tutor",
