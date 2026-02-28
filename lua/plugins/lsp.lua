@@ -1,6 +1,17 @@
 return {
   {
     "neovim/nvim-lspconfig",
+    -- un comment this if I really decide to use typescript in the future
+    -- dependencies = {
+    --   "jose-elias-alvarez/typescript.nvim",
+    --   init = function()
+    --     require("lazyvim.util").lsp.on_attach(function(_, buffer)
+    --       -- stylua: ignore
+    --       vim.keymap.set( "n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
+    --       vim.keymap.set("n", "<leader>cR", "TypescriptRenameFile", { desc = "Rename File", buffer = buffer })
+    --     end)
+    --   end,
+    -- },
     opts = {
       servers = {
         ruby_lsp = {
@@ -11,11 +22,76 @@ return {
             linters = { "rubocop" }
           },
         },
+        pyright = {},
+        tsserver ={},
+      },
+      setup = {
+        -- example to setup with typescript.nvim
+        tsserver = function(_, opts)
+          require("typescript").setup({ server = opts })
+          return true
+        end,
+        -- Specify * to use this function as a fallback for any server
+        -- ["*"] = function(server, opts) end,
       },
     },
   },
+  {
+    "stevearc/conform.nvim",
+    dependencies = { "mason.nvim" },
+    lazy = true,
+    cmd = "ConformInfo",
+    keys = {
+      {
+        "<leader>cF",
+        function()
+          require("conform").format({ formatters = { "injected" }, timeout_ms = 3000 })
+        end,
+        mode = { "n", "v" },
+        desc = "Format Injected Langs",
+      },
+    },
+  },
+  {
+    "mason-org/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "stylua",
+        "shellcheck",
+        "shfmt",
+        "flake8",
+      },
+      automatic_installation = false,
+    },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "bash",
+        "html",
+        "javascript",
+        "json",
+        "lua",
+        "markdown",
+        "markdown_inline",
+        "python",
+        "query",
+        "regex",
+        "tsx",
+        "typescript",
+        "vim",
+        "yaml",
+      },
+      indent = {
+        enable = true,
+        disable = { "ruby", "haml" }
+      }
+    }
+  },
+  { import = "lazyvim.plugins.extras.lang.json" },
+  { import = "lazyvim.plugins.extras.lang.typescript" },
 }
-
 
 -- local lspconfig = require('lspconfig')
 --
