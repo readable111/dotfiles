@@ -21,6 +21,7 @@ return {
             formatter = "rubocop",
             linters = { "rubocop" }
           },
+          filetypes ={ "ruby", "haml", "eruby"}
         },
         pyright = {},
         tsserver ={},
@@ -35,6 +36,19 @@ return {
         -- ["*"] = function(server, opts) end,
       },
     },
+    init = function()
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client.name == "ruby_lsp" then
+            local bufname = vim.api.nvim_buf_get_name(args.buf)
+            if bufname:match("%.haml$") then
+              vim.diagnostic.enable(false, { bufnr = args.buf })
+            end
+          end
+        end,
+      })
+    end
   },
   {
     "stevearc/conform.nvim",
@@ -82,6 +96,7 @@ return {
         "typescript",
         "vim",
         "yaml",
+        "haml"
       },
       indent = {
         enable = true,
